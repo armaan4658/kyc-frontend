@@ -1,0 +1,96 @@
+# KYC
+
+## Overview
+This project implements a Vue.js components that uses Element Plus for styling and functionality. The table displays data such as KYC (Know Your Customer) statuses with options for filtering, approving, rejecting, and downloading documents. If no data is available, a user-friendly "No Data Found" message is displayed.
+
+## Features
+- **Dynamic Table**: Displays rows of data with columns for approval status, submission time, name, and operations.
+- **Conditional Rendering**: Shows a "No Data Found" message when there is no data in the table.
+- **Operations**:
+  - Approve or Reject KYC entries.
+  - Download documents associated with each entry.
+- **Pagination**: Allows navigation between pages of data.
+- **Tooltips and Tags**: Uses `el-popover` for additional details and `el-tag` for labels.
+
+## Prerequisites
+- Node.js (v16 or later)
+- Vue 3
+- Element Plus library
+
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd <project_directory>
+   ```
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+## Usage
+1. Start the development server:
+   ```bash
+   npm run dev
+   ```
+2. Open your browser and navigate to `http://localhost:5173`.
+
+## File Structure
+```
+project-directory/
+├── src/
+│   ├── components/
+│   │   │   ├── views/ 
+│   │   │   │   ├── Createuser.vue
+│   │   │   │   ├── Dashboard.vue
+│   │   │   ├── layouts/ 
+│   │   │   │   ├── Authlayout.vue
+│   ├── api/
+│   │   └── api.service.ts
+│   ├── App.vue
+│   └── main.ts
+├── public/
+├── package.json
+└── README.md
+```
+
+## API Integration
+The component fetches data from an API using the following method:
+- `ApiService.getKycStatus()`: Retrieves the current KYC status.
+
+## Key Components
+
+### `Kycsubmit.vue`
+This component is displayed when no KYC data is available. It provides an interface to submit KYC details.
+
+
+## Deployment
+1. Build the project:
+   ```bash
+   npm run build
+   ```
+2. Deploy the `dist/` folder to your web server.
+
+## Example Data Format
+The table expects data in the following format:
+```json
+[
+  {
+    "_id": "676689010fa8c8f80aabcd5b",
+    "name": "John Doe",
+    "email": "johndoe@test.com",
+    "status": "Pending",
+    "approved_on": "2024-12-20T10:30:00Z",
+    "submittedAt": "2024-12-19T14:00:00Z",
+    "approved_by": "Admin",
+    "documentBase64": "<base64-encoded-document>"
+  }
+]
+```
+
+## Dependencies
+- [Vue 3](https://vuejs.org/)
+- [Element Plus](https://element-plus.org/)
