@@ -1,6 +1,10 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
+import { ElMessage } from 'element-plus';
+import { useRouter } from 'vue-router';
 
-// Set up Axios instance
+const router = useRouter()
+
+
 const apiClient: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL, 
   headers: {
@@ -22,30 +26,46 @@ apiClient.interceptors.request.use(
     }
   );
 
+apiClient.interceptors.response.use(
+  (response) => {
+      return response;
+  },
+  (error) => {
+      if (error.response) {
+          if (error.status === 401 && error.response.data.message === "Invalid or expired token") {
+              ElMessage.error('Session expired, please log in again.');
+              localStorage.clear()
+              router.push({path: '/login'}); 
+          } 
+      }
+      return Promise.reject(error);
+  }
+);
+
 export default class ApiService {
 
   static createUser(data: any): Promise<AxiosResponse> {
-    return apiClient.post('/user/create', data);
+    return apiClient.post('/users/create', data);
   }
 
-  static getAllUsers(): Promise<AxiosResponse> {
-    return apiClient.get('/user/list');
+  static getAllUsers(page: number = 1, limit: number = 5): Promise<AxiosResponse> {
+    return apiClient.get(`/users/list?page=${page}&limit=${limit}`);
   }
 
   static getUserById(userId: string): Promise<AxiosResponse> {
-    return apiClient.get(`/user/profile/${userId}`);
+    return apiClient.get(`/users/profile/${userId}`);
   }
 
   static updateUser(userId: string, data: any): Promise<AxiosResponse> {
-    return apiClient.patch(`/user/${userId}`, data);
+    return apiClient.patch(`/users/${userId}`, data);
   }
 
   static deleteUser(userId: string): Promise<AxiosResponse> {
-    return apiClient.delete(`/user/${userId}`);
+    return apiClient.delete(`/users/${userId}`);
   }
 
   static createAdmin(): Promise<AxiosResponse> {
-    return apiClient.post('/user/createAdmin');
+    return apiClient.post('/users/createAdmin');
   }
 
   // KYC APIs
@@ -65,8 +85,8 @@ export default class ApiService {
     return apiClient.patch(`/kyc/status/${userId}`, { status });
   }
 
-  static getAllKycSubmissions(): Promise<AxiosResponse> {
-    return apiClient.get('/kyc/submissions');
+  static getAllKycSubmissions(page: number = 1, limit: number = 5): Promise<AxiosResponse> {
+    return apiClient.get(`/kyc/submissions?page=${page}&limit=${limit}`);
   }
 
   static getKpiStats(): Promise<AxiosResponse> {

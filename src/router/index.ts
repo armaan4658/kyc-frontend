@@ -3,11 +3,7 @@ import AuthLayout from "../components/layouts/AuthLayout.vue";
 import DashboardLayout from "../components/layouts/DashboardLayout.vue";
 
 import Login from "../components/views/Login.vue";
-// import Signup from "@/components/Signup.vue";
-// import ResetPassword from "@/components/ResetPassword.vue";
-// import Dashboard from "@/components/Dashboard.vue";
-// import KYC from "@/components/KYC.vue";
-// import Users from "@/components/Users.vue";
+import Signup from "../components/views/Signup.vue";
 
 const routes = [
   {
@@ -22,27 +18,22 @@ const routes = [
     component: AuthLayout,
     children: [
       { path: "login", component: Login },
-    //   { path: "signup", component: Signup },
+      { path: "signup", component: Signup },
     //   { path: "reset", component: ResetPassword },
     ],
   },
-//   {
-//     path: "/",
-//     component: DashboardLayout,
-//     beforeEnter: (to, from, next) => {
-//       const token = localStorage.getItem("token");
-//       if (!token) {
-//         next("/login"); // Redirect to login if no token
-//       } else {
-//         next();
-//       }
-//     },
-//     children: [
-//       { path: "dashboard", component: Dashboard },
-//       { path: "kyc", component: KYC },
-//       { path: "users", component: Users },
-//     ],
-//   },
+  {
+    path: "/dashboard",
+    component: DashboardLayout,
+    beforeEnter: (to: any, from: any, next: any) => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        next("/login"); // Redirect to login if no token
+      } else {
+        next();
+      }
+    }
+  },
 ];
 
 const router = createRouter({

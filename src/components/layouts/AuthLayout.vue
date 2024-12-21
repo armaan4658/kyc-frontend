@@ -1,12 +1,5 @@
 <template>
-  <div>
-    <header>
-      <h1>Welcome to Auth Layout</h1>
-    </header>
-    <main>
       <router-view /> <!-- Render login, signup, or reset -->
-    </main>
-  </div>
 </template>
 
 <script lang="ts">
