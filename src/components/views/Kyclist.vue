@@ -212,9 +212,11 @@ onMounted(() => {
     justify-content: center;
     width: 100%;
     margin: 0 auto;
+    padding: 0 10px;
 }
 
 .el-table {
+    width: 100%;
     margin-bottom: 20px;
 }
 
@@ -222,5 +224,43 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     width: 100%;
+    margin: 10px 0;
+}
+
+/* Responsive styles for tablets and mobiles */
+@media (max-width: 1024px) {
+    .el-table {
+        width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .el-table {
+        font-size: 14px;
+    }
+
+    .el-pagination {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .el-table {
+        font-size: 12px;
+        /* Further adjust font size for mobile screens */
+    }
+
+    .el-table-column {
+        flex-wrap: wrap;
+        /* Allow table columns to stack */
+    }
+
+    .el-pagination {
+        flex-direction: column;
+        align-items: center;
+        padding: 5px 0;
+    }
 }
 </style>
