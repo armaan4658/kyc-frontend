@@ -91,8 +91,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
 import { ElMessage } from "element-plus";
-import { Timer } from "@element-plus/icons-vue";
 import ApiService from "@/api/api.service";
+import { Timer } from "@element-plus/icons-vue";
 
 interface KYCSubmission {
     _id: string;
@@ -112,12 +112,16 @@ interface Pagination {
     totalRecords: number;
 }
 
+// Declare reactive variables
 const tableData = ref<KYCSubmission[]>([]);
 const pagination = ref<Pagination>({
     page: 1,
     limit: 5,
     totalRecords: 0,
 });
+
+// Use emit to communicate with the parent
+const emit: (event: 'update-success', payload: boolean) => void = defineEmits(['update-success']);
 
 // Fetch KYC Data with pagination
 const fetchKYCData = async (page: number = 1, limit: number = 5) => {
@@ -132,16 +136,18 @@ const fetchKYCData = async (page: number = 1, limit: number = 5) => {
         }
     } catch (error: any) {
         console.error("Error fetching KYC data:", error);
-        ElMessage.error(error.response.data.message);
+        ElMessage.error(error.response?.data?.message || "An error occurred while fetching KYC data.");
     }
 };
 
+// Format dates
 const formatDate = (dateString: string | Date | undefined): string => {
     if (!dateString) return '-';
     const date = new Date(dateString);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString();
 };
 
+// Get tag type based on status
 const getStatusTagType = (status: string): string => {
     switch (status) {
         case "Approved":
@@ -155,19 +161,28 @@ const getStatusTagType = (status: string): string => {
     }
 };
 
+// Handle Approve or Reject
 const handleApproveReject = (index: number, row: KYCSubmission, status: string) => {
     ApiService.updateKycStatus(row.user, status)
         .then(response => {
             if (response.status === 200) {
                 ElMessage.success(response.data.message);
+
+                // Emit event to the parent
+                emit('update-success', true);
+
+                // Fetch updated data
                 fetchKYCData(pagination.value.page);
             } else {
                 ElMessage.error(response.data.message);
             }
         })
-        .catch(error => ElMessage.error(error.response.data.message));
+        .catch(error => {
+            ElMessage.error(error.response?.data?.message || "An error occurred while updating KYC status.");
+        });
 };
 
+// Download document
 const downloadDocument = (base64Data: string, fileName: string) => {
     if (!base64Data) return;
     const link = document.createElement('a');
@@ -183,6 +198,7 @@ const handlePageChange = (page: number) => {
     fetchKYCData(page);
 };
 
+// Fetch data on component mount
 onMounted(() => {
     fetchKYCData(pagination.value.page);
 });
